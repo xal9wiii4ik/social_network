@@ -31,7 +31,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
 
-    'apps.userprofile'
+    'apps.userprofile',
+    'apps.followers'
 ]
 
 AUTH_USER_MODEL = 'userprofile.CustomUser'

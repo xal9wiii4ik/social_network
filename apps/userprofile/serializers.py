@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 
 class AbstractUserOwnerModelSerializer(serializers.ModelSerializer):
-    """Model Serializer for abstract user"""
+    """Model Serializer for abstract user(owner)"""
 
     class Meta:
         model = get_user_model()
@@ -12,7 +12,7 @@ class AbstractUserOwnerModelSerializer(serializers.ModelSerializer):
 
 
 class AbstractUserGuestsModelSerializer(serializers.ModelSerializer):
-    """Model Serializer for abstract user"""
+    """Model Serializer for abstract user(guest)"""
 
     class Meta:
         model = get_user_model()
