@@ -8,7 +8,8 @@ from apps.userprofile.models import CustomUser
 class CustomUserAdmin(UserAdmin):
     """Кастомная админка для пользователя"""
 
-    list_display = ('username', 'email', 'is_staff', 'gender', 'phone')
+    list_display = ('username', 'email', 'is_staff',
+                    'gender', 'phone', 'followers', 'subscribers')
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('Personal info'), {
