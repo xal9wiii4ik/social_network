@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'apps.userprofile',
-    'apps.followers'
+    'apps.followers',
+    'apps.post'
 ]
 
 AUTH_USER_MODEL = 'userprofile.CustomUser'
@@ -107,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Minsk'
 
 USE_I18N = True
 
