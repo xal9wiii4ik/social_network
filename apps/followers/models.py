@@ -7,10 +7,22 @@ class Follower(models.Model):
 
     owner = models.ForeignKey(to=get_user_model(), related_name='owner', on_delete=models.CASCADE)
     follower = models.ForeignKey(to=get_user_model(), related_name='follower', on_delete=models.CASCADE)
-    # TODO: OneToOne for follower
 
     def __str__(self):
-        return f'{self.pk}, owner: {self.owner}, follower: {self.follower}'
+        return f'{self.pk}, owner: {self.owner}, follower: {self.follower}, ' \
+               f's: {Follower.objects.filter(owner=self.owner).count()}'
+
+    def save(self, *args, **kwargs):
+        user = get_user_model().objects.get(id=self.owner.id)
+        user.followers += 1
+        user.save()
+        return super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        user = get_user_model().objects.get(id=self.owner.id)
+        user.followers -= 1
+        user.save()
+        return super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Подписчик'

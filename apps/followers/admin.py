@@ -7,4 +7,4 @@ from apps.followers.models import Follower
 class FollowerModelAdmin(admin.ModelAdmin):
     """Model follower in admin panel"""
 
-    list_display = ['id', 'follower', 'owner']
+    list_display = ['id', 'owner', 'follower']
