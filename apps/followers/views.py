@@ -14,7 +14,6 @@ class FollowerModelViewSet(mixins.ListModelMixin,
     queryset = Follower.objects.all().annotate(
         follower_name=F('follower__username')
     )
-    # TODO: check delete object
 
     def get_queryset(self):
         """Get only user followers"""

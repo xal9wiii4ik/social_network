@@ -12,14 +12,12 @@ class Follower(models.Model):
         return f'{self.pk}, owner: {self.owner}, follower: {self.follower}'
 
     def save(self, *args, **kwargs):
-        print(2)
         user = get_user_model().objects.get(id=self.owner.id)
         user.followers += 1
         user.save()
         return super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        print(1)
         user = get_user_model().objects.get(id=self.owner.id)
         user.followers -= 1
         user.save()
