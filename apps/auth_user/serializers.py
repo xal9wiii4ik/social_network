@@ -25,3 +25,28 @@ class RegistrationSerializer(serializers.Serializer):
         """Валидация пароля"""
 
         return verification_password(value=value)
+
+
+class LogInSerializer(serializers.Serializer):
+    """Serializer for log in"""
+
+    username = serializers.CharField(max_length=150, required=True)
+    password = serializers.CharField(max_length=128, required=True)
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    """Serializer for reset password before set password"""
+
+    email = serializers.EmailField(required=True)
+
+
+class SetPasswordSerializer(serializers.Serializer):
+    """Serializer for set password after the confirmation"""
+
+    password = serializers.CharField(max_length=128, required=True)
+    repeat_password = serializers.CharField(max_length=128, required=True)
+
+    def validate_password(self, value: str) -> str:
+        """Валидация пароля"""
+
+        return verification_password(value=value)

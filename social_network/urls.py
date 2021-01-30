@@ -1,8 +1,8 @@
-from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
 
 from rest_framework.routers import SimpleRouter
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from apps.userprofile.views import (
     AbstractUserGuestsViewSet,
@@ -18,7 +18,10 @@ from apps.post.views import (
 )
 from apps.auth_user.views import (
     RegistrationView,
-    ActivationView
+    ActivationView,
+    LogInView,
+    ResetPasswordView,
+    SetPasswordView,
 )
 
 router = SimpleRouter()
@@ -32,8 +35,13 @@ router.register(r'subjects', SubjectModelViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    url('auth/registration/', RegistrationView.as_view(), name='registration'),
-    path('auth/activation/<str:uid>/<str:token>/', ActivationView.as_view(), name='activation')
+    path('auth/token/', TokenObtainPairView.as_view(), name='token'),
+
+    path('auth/registration/', RegistrationView.as_view(), name='registration'),
+    path('auth/activation/<str:uid>/<str:token>/', ActivationView.as_view(), name='activation'),
+    path('auth/login/', LogInView.as_view(), name='login'),
+    path('auth/reset_password/', ResetPasswordView.as_view(), name='reset_password'),
+    path('auth/reset_password/<str:uid>/<str:token>/', SetPasswordView.as_view(), name='reset_password_confirm'),
 ]
 
 urlpatterns += router.urls

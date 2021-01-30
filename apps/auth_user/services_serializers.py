@@ -22,7 +22,7 @@ def verification_password(value: str) -> str:
     if len(value) >= 8:
         if any((c in set('QAZWSXEDCRFVTGBYHNUJMIKOLP')) for c in value):
             if any((f in set('1234567890') for f in value)):
-                return make_password(value)
+                return value
             else:
                 raise serializers.ValidationError('Password must contain at least 1 number')
         else:

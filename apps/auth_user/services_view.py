@@ -1,7 +1,12 @@
+import json
+import requests
+
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import check_password, make_password
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.urls import reverse
 
 from rest_framework.authtoken.models import Token
 
@@ -14,7 +19,7 @@ def create_user_and_send_email_for_activation(data: dict, request) -> None:
     письма на почту для активации"""
 
     user = get_user_model().objects.create(username=data['username'],
-                                           password=data['password'],
+                                           password=make_password(data['password']),
                                            email=data['email'],
                                            last_name=data['last_name'],
                                            first_name=data['first_name'],
@@ -22,7 +27,7 @@ def create_user_and_send_email_for_activation(data: dict, request) -> None:
     new_data = _create_unique_uid_and_token(user=user)
     url = _get_web_url(is_secure=request.is_secure(),
                        host=request.get_host(),
-                       url=f'/auth/activation/{new_data["uid"]}/{new_data["token"]}')
+                       url=f'/auth/activation/{new_data["uid"]}/{new_data["token"]}/')
     send_mail(subject='Activation mail',
               message=f'Your activation link: \n {url}',
               from_email=settings.EMAIL_HOST_USER,
@@ -47,6 +52,60 @@ def activate_user_and_create_user_profile(uid: str, token: str) -> bool:
         return True
     else:
         return False
+
+
+def log_in(request, data: dict) -> dict:
+    """Check password and return tokens or false"""
+
+    try:
+        user = get_user_model().objects.get(username=data['username'])
+        if check_password(data['password'], user.password):
+            url = _get_web_url(
+                is_secure=request.is_secure(),
+                host=request.get_host(),
+                url=reverse('token')
+            )
+            response = requests.post(url=url, json={
+                'password': data['password'],
+                'username': user.username
+            })
+            return json.loads(response._content.decode('utf-8'))
+        return {'error': 'Invalid password'}
+    except Exception:
+        return {'error': 'User does not exist'}
+
+
+def reset_password(request, data: dict) -> dict:
+    """Send email for reset password"""
+
+    try:
+        user = get_user_model().objects.get(email=data['email'])
+    except Exception:
+        return {'error': 'User does not exist'}
+    else:
+        new_data = _create_unique_uid_and_token(user=user)
+        url = _get_web_url(is_secure=request.is_secure(),
+                           host=request.get_host(),
+                           url=f'/auth/reset_password/{new_data["uid"]}/{new_data["token"]}/')
+        send_mail(subject='Reset password mail',
+                  message=f'Your reset password link: \n {url}',
+                  from_email=settings.EMAIL_HOST_USER,
+                  recipient_list=[data['email']],
+                  fail_silently=False)
+
+
+def set_password(uid: str, token: str, data: dict) -> None:
+    """Set new password after confirm"""
+
+    verification_data = _get_verification_data_or_404(
+        uid=uid,
+        token=token
+    )
+
+    verification_data['token_object'].user.password = make_password(data['password'])
+    verification_data['token_object'].user.save()
+    _delete_uid_and_token(uid_object=verification_data['uid_object'],
+                          token_object=verification_data['token_object'])
 
 
 def _create_unique_uid_and_token(user) -> dict:

@@ -88,6 +88,17 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'check',
+#         'USER': 'postgres',
+#         'PASSWORD': 'django_user',
+#         'HOST': 'social_network_db',
+#         'PORT': 5432,
+#     }
+# }
+
 # SIMPLE JWT
 
 SIMPLE_JWT = {

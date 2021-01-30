@@ -1,14 +1,21 @@
 from django.db import IntegrityError
+
 from rest_framework import renderers, parsers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.auth_user.serializers import (
-    RegistrationSerializer
+    RegistrationSerializer,
+    LogInSerializer,
+    ResetPasswordSerializer,
+    SetPasswordSerializer,
 )
 from apps.auth_user.services_view import (
     create_user_and_send_email_for_activation,
     activate_user_and_create_user_profile,
+    log_in,
+    reset_password,
+    set_password,
 )
 
 
@@ -22,24 +29,22 @@ class RegistrationView(APIView):
         return Response(template_name='auth/sign_up.html')
 
     def post(self, request):
-        try:
-            if request.data['password'] == request.data['repeat_password']:
-                serializer = RegistrationSerializer(data=request.data)
-                if serializer.is_valid():
-                    try:
-                        create_user_and_send_email_for_activation(data=serializer.data, request=request)
-                    except IntegrityError:
-                        return Response(data={'error': 'User with this username already exist, try again'})
-                    else:
-                        return Response(data={'ok': 'Check your mail'},
-                                        status=status.HTTP_200_OK)
+
+        serializer = RegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            if serializer.data['password'] == serializer.data['repeat_password']:
+                try:
+                    create_user_and_send_email_for_activation(data=serializer.data, request=request)
+                except IntegrityError:
+                    return Response(data={'error': 'User with this username already exist, try again'})
                 else:
-                    return Response(data=serializer.errors,
-                                    status=status.HTTP_400_BAD_REQUEST)
-            return Response(data={'error': 'Password is not equal repeat password'},
+                    return Response(data={'ok': 'Check your mail'},
+                                    status=status.HTTP_200_OK)
+            else:
+                return Response(data={'error': 'Password and repeat password is not equal'})
+        else:
+            return Response(data=serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
-        except KeyError:
-            return Response(data={'error': 'Password or repeat password is missing!'})
 
 
 class ActivationView(APIView):
@@ -47,9 +52,44 @@ class ActivationView(APIView):
     создания """
 
     def get(self, request, uid, token):
-        print(1)
         if activate_user_and_create_user_profile(uid=uid, token=token):
             return Response(data={'ok': 'User has been activate'},
                             status=status.HTTP_200_OK)
         return Response(data={'error': 'Un valid uid or token'},
                         status=status.HTTP_400_BAD_REQUEST)
+
+
+class LogInView(APIView):
+    """View for login and take token"""
+
+    def post(self, request):
+        serializer = LogInSerializer(data=request.data)
+        if serializer.is_valid():
+            data = log_in(request=request, data=serializer.data)
+            return Response(data=data, status=status.HTTP_200_OK)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ResetPasswordView(APIView):
+    """View for resetting user's password before set password"""
+
+    def post(self, request):
+        serializer = ResetPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            data = reset_password(request=request, data=serializer.data)
+            return Response(data=data, status=status.HTTP_200_OK)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SetPasswordView(APIView):
+    """View for set new password"""
+
+    def post(self, request, uid: str, token: str):
+        serializer = SetPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            if serializer.data['password'] == serializer.data['repeat_password']:
+                set_password(uid=uid, token=token, data=serializer.data)
+                return Response(data={'ok': 'The password was changed'}, status=status.HTTP_200_OK)
+            else:
+                return Response(data={'error': 'Password and repeat password is not equal'})
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
