@@ -81,7 +81,7 @@ class ResetPasswordView(APIView):
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SetPasswordView(APIView):
+class SetNewPasswordView(APIView):
     """View for set new password"""
 
     def post(self, request, uid: str, token: str):
