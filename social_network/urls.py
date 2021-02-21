@@ -14,14 +14,15 @@ from apps.followers.views import (
 )
 from apps.post.views import (
     SubjectModelViewSet,
-    PostModelViewSet
+    PostModelViewSet,
+    CommentModelViewSet,
 )
 from apps.auth_user.views import (
     RegistrationView,
     ActivationView,
     LogInView,
     ResetPasswordView,
-    SetPasswordView,
+    SetNewPasswordView,
 )
 
 router = SimpleRouter()
@@ -31,6 +32,7 @@ router.register(r'followers', FollowerModelViewSet)
 router.register(r'subscribers', SubscriberModelViewSet)
 router.register(r'posts', PostModelViewSet)
 router.register(r'subjects', SubjectModelViewSet)
+router.register(r'comments', CommentModelViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,7 +43,7 @@ urlpatterns = [
     path('auth/activation/<str:uid>/<str:token>/', ActivationView.as_view(), name='activation'),
     path('auth/login/', LogInView.as_view(), name='login'),
     path('auth/reset_password/', ResetPasswordView.as_view(), name='reset_password'),
-    path('auth/reset_password/<str:uid>/<str:token>/', SetPasswordView.as_view(), name='reset_password_confirm'),
+    path('auth/reset_password/<str:uid>/<str:token>/', SetNewPasswordView.as_view(), name='reset_password_confirm'),
 ]
 
 urlpatterns += router.urls

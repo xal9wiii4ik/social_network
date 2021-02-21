@@ -30,3 +30,30 @@ class Post(models.Model):
     class Meta:
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
+
+
+class Comment(models.Model):
+    """Model of comments"""
+
+    user = models.ForeignKey(
+        to=get_user_model(),
+        on_delete=models.SET_NULL,
+        related_name='comment_owner',
+        null=True)
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE, related_name='comment_post')
+    parent = models.ForeignKey(
+        to='self',
+        default=None,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name='comment_parents')
+    text = models.TextField(verbose_name='Текст комментария')
+    date = models.DateTimeField(auto_now_add=True, verbose_name='Дата')
+
+    def __str__(self):
+        return f'{self.post.title}, {self.user.id}, {self.pk}'
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
