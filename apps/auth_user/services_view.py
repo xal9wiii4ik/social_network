@@ -69,7 +69,9 @@ def log_in(request, data: dict) -> dict:
                 'password': data['password'],
                 'username': user.username
             })
-            return json.loads(response._content.decode('utf-8'))
+            data = json.loads(response._content.decode('utf-8'))
+            data.update({'user_id': user.id})
+            return data
         return {'error': 'Invalid password'}
     except Exception:
         return {'error': 'User does not exist'}

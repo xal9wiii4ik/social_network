@@ -22,7 +22,7 @@ class RegistrationSerializer(serializers.Serializer):
         return verification_unique_email(email=value)
 
     def validate_password(self, value: str) -> str:
-        """Валидация пароля"""
+        """Password validation"""
 
         return verification_password(value=value)
 
@@ -47,6 +47,6 @@ class SetPasswordSerializer(serializers.Serializer):
     repeat_password = serializers.CharField(max_length=128, required=True)
 
     def validate_password(self, value: str) -> str:
-        """Валидация пароля"""
+        """Password validation"""
 
         return verification_password(value=value)
