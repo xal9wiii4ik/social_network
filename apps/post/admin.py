@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.post.models import Subject, Post, Comment
+from apps.post.models import Subject, Post, Comment, LikeDislike
 
 
 @admin.register(Subject)
@@ -10,16 +10,37 @@ class SubjectModelAdmin(admin.ModelAdmin):
     list_display = ['id', 'subject']
 
 
+@admin.register(LikeDislike)
+class LikeDislikeModelAdmin(admin.ModelAdmin):
+    """Model admin for like and dislike"""
+
+    list_display = ['id', 'get_username', 'get_title', 'like', 'dislike']
+
+    def get_username(self, obj):
+        """func for getting username of owner"""
+
+        return obj.user.username
+
+    def get_title(self, obj):
+        """func for getting title of post"""
+
+        return obj.post.title
+
+
 @admin.register(Comment)
 class CommentModelAdmin(admin.ModelAdmin):
     """Model admin for comment"""
 
-    list_display = ['id', 'username', 'title', 'text', 'date']
+    list_display = ['id', 'get_username', 'get_title', 'text', 'date']
 
-    def username(self, obj):
+    def get_username(self, obj):
+        """func for getting username of owner"""
+
         return obj.user.username
 
-    def title(self, obj):
+    def get_title(self, obj):
+        """func for getting title of post"""
+
         return obj.post.title
 
 

@@ -56,6 +56,22 @@ class Post(models.Model):
         verbose_name_plural = 'Посты'
 
 
+class LikeDislike(models.Model):
+    """Model of likes and dislikes"""
+
+    user = models.ForeignKey(to=get_user_model(), on_delete=models.SET_NULL, null=True)
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE)
+    like = models.PositiveIntegerField(verbose_name='Лайк', blank=True, null=True, default=0)
+    dislike = models.PositiveIntegerField(verbose_name='Дизлайк', blank=True, null=True, default=0)
+
+    def __str__(self):
+        return f'{self.post.title}, {self.user.username}, like: {self.like}, dislike {self.dislike}'
+
+    class Meta:
+        verbose_name = 'Лайк/Дизлайк'
+        verbose_name_plural = 'Лайки/Дизлайки'
+
+
 class Comment(models.Model):
     """Model of comments"""
 
