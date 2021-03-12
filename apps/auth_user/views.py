@@ -15,7 +15,7 @@ from apps.auth_user.services_view import (
     activate_user_and_create_user_profile,
     log_in,
     reset_password,
-    set_password,
+    set_password, _verification_uid_and_token,
 )
 
 
@@ -83,6 +83,17 @@ class ResetPasswordView(APIView):
 
 class SetNewPasswordView(APIView):
     """View for set new password"""
+
+    renderer_classes = (renderers.JSONRenderer, renderers.TemplateHTMLRenderer,)
+    parser_classes = (parsers.FormParser, parsers.JSONParser)
+
+    def get(self, request, uid, token):
+        if _verification_uid_and_token(uid=uid, token=token):
+            return Response(data={'uid': uid, 'token': token},
+                            status=status.HTTP_200_OK,
+                            template_name='set_password.html')
+        return Response(data={'error': 'Un valid uid or token'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, uid: str, token: str):
         serializer = SetPasswordSerializer(data=request.data)
