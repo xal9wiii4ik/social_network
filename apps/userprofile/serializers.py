@@ -8,12 +8,17 @@ class AbstractUserOwnerModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = '__all__'
+        exclude = ('date_joined',)
 
 
 class AbstractUserGuestsModelSerializer(serializers.ModelSerializer):
     """Model Serializer for abstract user(guest)"""
 
+    follower_id = serializers.SerializerMethodField
+
+    def get_follower_id(self, obj):
+        return 1
+
     class Meta:
         model = get_user_model()
-        fields = ['id', 'first_name', 'last_name', 'phone', 'gender', 'avatar']
+        fields = ['id', 'first_name', 'last_name', 'phone', 'gender', 'avatar', 'username']
