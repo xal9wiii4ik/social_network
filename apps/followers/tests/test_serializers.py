@@ -16,13 +16,13 @@ class FollowerModelSerializerTestCase(TestCase):
                                                       is_active=True)
         self.follower_user = Follower.objects.create(owner=self.user, follower=self.user_1)
 
-        followers = Follower.objects.all().annotate(follower_name=F('followers__username'))
+        followers = Follower.objects.all().annotate(follower_name=F('owner__username'))
         data = FollowerModelSerializer(followers, many=True).data
         expected_data = [
             {
-                'id': self.follower_user.id,
                 'owner': self.user.id,
-                'follower': self.user_1.id
+                'follower': self.user_1.id,
+                'follower_name': 'user'
             }
         ]
         self.assertEqual(first=expected_data, second=data)
