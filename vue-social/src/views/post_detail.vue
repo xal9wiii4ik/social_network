@@ -19,6 +19,20 @@
         </div>
       </div>
     </div>
+    <div class="comments">
+      <post-comment
+          v-if="post.comments"
+          v-for="comment in post.comments"
+          v-bind:key="comment.id"
+          v-bind:comment="comment">
+
+      </post-comment>
+      <form class="answer-form" @submit.prevent="submitCommentHandler">
+        <h4 class="add-comment">Add comment</h4>
+        <input type="text" v-model="text" placeholder="text">
+        <button type="submit">Submit</button>
+      </form>
+    </div>
     <form v-if="is_owner" @submit.prevent="deleteHandler">
       <button>Delete</button>
     </form>
@@ -32,8 +46,12 @@
 </template>
 
 <script>
+import postComment from '@/components/post-comment';
 export default {
   name: "post_detail",
+  components: {
+    'post-comment': postComment
+  },
   data() {
     return {
       post: null,
@@ -41,6 +59,27 @@ export default {
     }
   },
   methods: {
+    async submitCommentHandler() {
+      const data = {
+        text: this.text,
+        post: this.post.id
+      }
+      const response = await fetch(`http://localhost:8000/comments/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${localStorage.getItem('access_token')}`
+        },
+        body: JSON.stringify(data)
+      })
+      const response_data = await response.json()
+      if (response.status === 201) {
+        location.reload()
+        console.log('yes')
+      }else {
+        console.log('no')
+      }
+    },
     async fetchPost() {
       try {
         const response = await fetch(`http://localhost:8000/posts/${this.$route.params.id}`)
