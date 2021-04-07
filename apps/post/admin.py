@@ -17,13 +17,9 @@ class LikeDislikeModelAdmin(admin.ModelAdmin):
     list_display = ['id', 'get_username', 'get_title', 'like', 'dislike']
 
     def get_username(self, obj):
-        """func for getting username of owner"""
-
         return obj.user.username
 
     def get_title(self, obj):
-        """func for getting title of post"""
-
         return obj.post.title
 
 
@@ -34,13 +30,9 @@ class CommentModelAdmin(admin.ModelAdmin):
     list_display = ['id', 'get_username', 'get_title', 'text', 'date']
 
     def get_username(self, obj):
-        """func for getting username of owner"""
-
         return obj.user.username
 
     def get_title(self, obj):
-        """func for getting title of post"""
-
         return obj.post.title
 
 
@@ -50,4 +42,3 @@ class PostModelAdmin(admin.ModelAdmin):
 
     list_display = ['id', 'owner', 'subject', 'title', 'published_date']
     list_filter = ['published_date']
-    # TODO: check list_display_links

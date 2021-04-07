@@ -7,7 +7,7 @@ from apps.auth_user.services_serializers import (
 
 
 class RegistrationSerializer(serializers.Serializer):
-    """Сериализатор для регистрации пользователя"""
+    """Serializer for registration"""
 
     first_name = serializers.CharField(max_length=25, required=True)
     last_name = serializers.CharField(max_length=25, required=True)
@@ -17,13 +17,9 @@ class RegistrationSerializer(serializers.Serializer):
     repeat_password = serializers.CharField(max_length=60, required=True)
 
     def validate_email(self, value: str) -> str:
-        """Валидация почты"""
-
         return verification_unique_email(email=value)
 
     def validate_password(self, value: str) -> str:
-        """Password validation"""
-
         return verification_password(value=value)
 
 
@@ -47,6 +43,4 @@ class SetPasswordSerializer(serializers.Serializer):
     repeat_password = serializers.CharField(max_length=128, required=True)
 
     def validate_password(self, value: str) -> str:
-        """Password validation"""
-
         return verification_password(value=value)

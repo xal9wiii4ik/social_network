@@ -3,7 +3,7 @@ from django.db import models
 
 
 class CustomUser(AbstractUser):
-    """Переопределение модели пользователь"""
+    """Custom user model"""
 
     CHOICES_GENDER = [
         ('male', 'male'),

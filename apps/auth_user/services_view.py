@@ -15,8 +15,7 @@ from social_network import settings
 
 
 def create_user_and_send_email_for_activation(data: dict, request) -> None:
-    """Создание пользователя и отправка
-    письма на почту для активации"""
+    """create user and send email for activation"""
 
     user = get_user_model().objects.create(username=data['username'],
                                            password=make_password(data['password']),
@@ -36,7 +35,7 @@ def create_user_and_send_email_for_activation(data: dict, request) -> None:
 
 
 def activate_user_and_create_user_profile(uid: str, token: str) -> bool:
-    """Активация пользователя и создание профиля пользователя"""
+    """activation user and create user profile"""
 
     if _verification_uid_and_token(uid=uid, token=token):
         verification_data = _get_verification_data_or_404(
@@ -111,8 +110,7 @@ def set_password(uid: str, token: str, data: dict) -> None:
 
 
 def _create_unique_uid_and_token(user) -> dict:
-    """Создание уникального юида и токена
-    для потдверждения уникальности пользователя"""
+    """Create unique uid and token"""
 
     uid = Uid.objects.create(user=user)
     token = Token.objects.create(user=user)
@@ -123,14 +121,14 @@ def _create_unique_uid_and_token(user) -> dict:
 
 
 def _delete_uid_and_token(uid_object, token_object) -> None:
-    """Удаление объектов юида и токена"""
+    """delete uid and token"""
 
     uid_object.delete()
     token_object.delete()
 
 
 def _verification_uid_and_token(uid: str, token: str) -> bool:
-    """Проверка юида и токена на правильность"""
+    """check uid and token"""
 
     verification_data = _get_verification_data_or_404(
         uid=uid,
@@ -143,7 +141,7 @@ def _verification_uid_and_token(uid: str, token: str) -> bool:
 
 
 def _get_verification_data_or_404(uid: str, token: str) -> dict:
-    """Получение объектов юида и токена"""
+    """getting uid and token"""
 
     uid_object = get_object_or_404(klass=Uid,
                                    uid=uid)
@@ -156,7 +154,7 @@ def _get_verification_data_or_404(uid: str, token: str) -> dict:
 
 
 def _get_web_url(is_secure: bool, host: str, url: str) -> str:
-    """Получение ссылки"""
+    """getting url"""
 
     protocol = 'https://' if is_secure else 'http://'
     web_url = protocol + host

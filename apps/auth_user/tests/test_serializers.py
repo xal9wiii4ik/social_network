@@ -10,10 +10,10 @@ from apps.auth_user.serializers import (
 
 
 class RegistrationSerializerTestCase(TestCase):
-    """Тест для сериалайзера регистрации"""
+    """Test for RegistrationSerializer"""
 
     def test_valid_data(self):
-        """Тест сериалайзера регистрации валидные данные"""
+        """valid data"""
 
         data = {
             'first_name': 'first_name',
@@ -26,7 +26,7 @@ class RegistrationSerializerTestCase(TestCase):
         self.assertTrue(RegistrationSerializer(data=data).is_valid())
 
     def test_un_valid_mail(self):
-        """Тест сериалайзера регистрации не валидный майл"""
+        """un valid mail"""
 
         data = {
             'first_name': 'first_name',
@@ -39,8 +39,7 @@ class RegistrationSerializerTestCase(TestCase):
         self.assertFalse(RegistrationSerializer(data=data).is_valid())
 
     def test_un_valid_password_less_then_8_characters(self):
-        """Тест сериалайзера регистрации не валидный пароль
-        меньше 8 символов"""
+        """un valid password"""
 
         data = {
             'first_name': 'first_name',
@@ -53,8 +52,7 @@ class RegistrationSerializerTestCase(TestCase):
         self.assertFalse(RegistrationSerializer(data=data).is_valid())
 
     def test_un_valid_password_with_out_capital_letter(self):
-        """Тест сериалайзера регистрации не валидный пароль
-        без заглавной буквы"""
+        """un valid password"""
 
         data = {
             'first_name': 'first_name',
@@ -67,8 +65,7 @@ class RegistrationSerializerTestCase(TestCase):
         self.assertFalse(RegistrationSerializer(data=data).is_valid())
 
     def test_un_valid_password_with_out_numbers(self):
-        """Тест сериалайзера регистрации не валидный пароль
-        без цифр"""
+        """un valid password"""
 
         data = {
             'first_name': 'first_name',
@@ -82,13 +79,13 @@ class RegistrationSerializerTestCase(TestCase):
 
 
 class LoginSerializerTestCase(TestCase):
-    """Тест для сериалайзера авторизации"""
+    """Test for LoginSerializer"""
 
     def setUp(self):
         get_user_model().objects.create(username='username', email='username@mail.ru')
 
     def test_valid_data(self):
-        """Тест сериалайзера авторизации валидные данные"""
+        """valid data"""
 
         data = {
             'username': 'username@mail.ru',
@@ -99,8 +96,7 @@ class LoginSerializerTestCase(TestCase):
         self.assertEqual('username@mail.ru', serializer.data['username'])
 
     def test_un_valid_data_mail(self):
-        """Тест сериалайзера авторизации не валидные данные
-        почта пользователя"""
+        """un valid data"""
 
         data = {
             'email': 'userna@mail.ru',
@@ -111,13 +107,13 @@ class LoginSerializerTestCase(TestCase):
 
 
 class ResetPasswordSerializerTestCase(TestCase):
-    """Тест для сериалайзера забыл пароль"""
+    """Test for ResetPassword"""
 
     def setUp(self):
         get_user_model().objects.create(username='username', email='username@mail.ru')
 
     def test_valid_data(self):
-        """Тест сериалайзера забыл пароль валидные данныe"""
+        """valid data"""
 
         data = {
             'email': 'username@mail.ru'
@@ -125,8 +121,7 @@ class ResetPasswordSerializerTestCase(TestCase):
         self.assertTrue(ResetPasswordSerializer(data=data).is_valid())
 
     def test_un_valid_data_mail(self):
-        """Тест сериалайзера забыл пароль не валидные данные
-        почта пользователя"""
+        """valid data"""
 
         data = {
             'username': 'usern@mail.ru'
@@ -135,10 +130,10 @@ class ResetPasswordSerializerTestCase(TestCase):
 
 
 class SetPasswordSerializerTestCase(TestCase):
-    """Тест для сериалайзера замена пароля"""
+    """Test for SetPassword"""
 
     def test_valid_data(self):
-        """Тест для сериалайзера замена пароля валидные данные"""
+        """valid data"""
 
         data = {
             'password': 'Password1',
@@ -147,8 +142,7 @@ class SetPasswordSerializerTestCase(TestCase):
         self.assertTrue(SetPasswordSerializer(data=data).is_valid())
 
     def test_un_valid_password_less_then_8_characters(self):
-        """Тест сериалайзера замена пароля не валидный пароль
-        меньше 8 символов"""
+        """un valid password"""
 
         data = {
             'password': 'pass',
@@ -157,8 +151,7 @@ class SetPasswordSerializerTestCase(TestCase):
         self.assertFalse(SetPasswordSerializer(data=data).is_valid())
 
     def test_un_valid_password_with_out_capital_letter(self):
-        """Тест сериалайзера замена пароля не валидный пароль
-        без заглавной буквы"""
+        """un valid password"""
 
         data = {
             'password': '12345678',
@@ -167,8 +160,7 @@ class SetPasswordSerializerTestCase(TestCase):
         self.assertFalse(SetPasswordSerializer(data=data).is_valid())
 
     def test_un_valid_password_with_out_numbers(self):
-        """Тест сериалайзера замена пароля не валидный пароль
-        без цифр"""
+        """un valid password"""
 
         data = {
             'password': 'asdAASDa',

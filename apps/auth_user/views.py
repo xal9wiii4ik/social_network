@@ -20,7 +20,7 @@ from apps.auth_user.services_view import (
 
 
 class RegistrationView(APIView):
-    """APIView для регистрации пользователя"""
+    """APIView for registration"""
 
     renderer_classes = (renderers.JSONRenderer,)
     parser_classes = (parsers.FormParser, parsers.JSONParser)
@@ -48,8 +48,7 @@ class RegistrationView(APIView):
 
 
 class ActivationView(APIView):
-    """View для активации пользователя и
-    создания """
+    """View for activate"""
 
     def get(self, request, uid, token):
         if activate_user_and_create_user_profile(uid=uid, token=token):

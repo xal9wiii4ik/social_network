@@ -16,7 +16,7 @@ def verification_unique_email(email: str) -> str:
 
 
 def verification_password(value: str) -> str:
-    """Проверка пароля"""
+    """check password"""
 
     if len(value) >= 8:
         if any((c in set('QAZWSXEDCRFVTGBYHNUJMIKOLP')) for c in value):

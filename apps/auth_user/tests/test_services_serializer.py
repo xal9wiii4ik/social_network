@@ -9,15 +9,14 @@ from apps.auth_user.services_serializers import (
 
 
 class ServicesSerializerTestCase(TestCase):
-    """Тест для бизнес логики сериализаторов"""
+    """Test for services"""
 
     def setUp(self):
         self.user = get_user_model().objects.create(username='user',
                                                     email='email@mail.ru')
 
     def test_verification_password_un_valid_least_8(self):
-        """Тест для проверки не валидного пароля
-        меньше 8"""
+        """un valid password"""
 
         try:
             verification_password(value='1234567')
@@ -27,8 +26,7 @@ class ServicesSerializerTestCase(TestCase):
             self.assertTrue(False)
 
     def test_verification_password_un_valid_only_numbers(self):
-        """Тест для проверки не валидного пароля
-        только цифры"""
+        """un valid password"""
 
         try:
             verification_password(value='12345678')
@@ -38,8 +36,7 @@ class ServicesSerializerTestCase(TestCase):
             self.assertTrue(False)
 
     def test_verification_password_un_valid_no_contain_upper_latter(self):
-        """Тест для проверки не валидного пароля
-        нету заглавной буквы"""
+        """un valid password"""
 
         try:
             verification_password(value='12345678')
@@ -49,8 +46,7 @@ class ServicesSerializerTestCase(TestCase):
             self.assertTrue(False)
 
     def test_verification_password_un_valid_no_contain_number(self):
-        """Тест для проверки не валидного пароля
-        нету цифры"""
+        """un valid password"""
 
         try:
             verification_password(value='aaaaaaaAAAAA')
@@ -60,12 +56,12 @@ class ServicesSerializerTestCase(TestCase):
             self.assertTrue(False)
 
     def test_verification_password_valid(self):
-        """Тест для проверки валидного пароля"""
+        """un valid password"""
 
         self.assertEqual('aaaaaaaAAAAA1', verification_password('aaaaaaaAAAAA1'))
 
     def test_verification_unique_email(self):
-        """Тест для проверки для проверки уникальности почты"""
+        """verification unique email"""
 
         self.assertEqual('exist@mail.ru',
                          verification_unique_email('exist@mail.ru'))

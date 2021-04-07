@@ -9,6 +9,7 @@ from apps.followers.models import Follower
 from apps.followers.serializers import FollowerModelSerializer
 from apps.followers.permissions import IsOwnerOrIsAuthenticated
 
+
 class FollowerModelViewSet(mixins.ListModelMixin,
                            mixins.CreateModelMixin,
                            mixins.DestroyModelMixin,

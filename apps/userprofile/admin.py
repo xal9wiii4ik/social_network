@@ -6,7 +6,7 @@ from apps.userprofile.models import CustomUser
 
 
 class CustomUserAdmin(UserAdmin):
-    """Кастомная админка для пользователя"""
+    """Display custom user in admin panel"""
 
     list_display = ('username', 'email', 'is_staff',
                     'gender', 'phone', 'followers', 'subscribers')
