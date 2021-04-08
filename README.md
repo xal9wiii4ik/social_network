@@ -12,4 +12,6 @@ custom auth with depends on django-crm(you can check in my repositories)
 6) smtp
 7) social-auth-core
 
+# Database PostgreSQL
+
 # date the code was written: 03.02.2021
